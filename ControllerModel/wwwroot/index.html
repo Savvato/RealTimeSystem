@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Регулятор</title>
+</head>
+<body>
+    <h2>Регулятор</h2>
+    <input type="button" id="InitBtn" value="Старт" />
+    <br/><br/>
+    <div id="Settings" hidden="hidden">
+        <label>Температура газа (задание):</label>
+        <input type="number" id="TargetT" min="0" /> <input type="button" id="TargetTBtn" value="Отправить" />
+        <br /><br />
+        <label>Температура газа (задание, текущее значение):</label>
+        <input type="number" id="CurrentTargetT" min="0" disabled />
+        <br /><br />
+        <label>Текущее значение объёма поступающего воздуха:</label>
+        <input type="number" id="currentG" disabled />
+        <br /><br />
+        <label>Текущее значение температуры газа:</label>
+        <input type="number" id="currentT" disabled />
+        <br /><br />
+        <label>Ошибка регулирования:</label>
+        <input type="number" id="currentE" disabled />
+    </div>
+
+    
+    <br /><br />
+    <script src="js/signalr-client-1.0.0-alpha2-final.min.js"></script>
+    <script>
+        let hubUrl = 'http://localhost:57364/hub';
+        let httpConnection = new signalR.HttpConnection(hubUrl);
+        let hubConnection = new signalR.HubConnection(httpConnection);
+
+        hubConnection.on("Data", function (E, TargetT, T, G) {
+            document.getElementById("InitBtn").hidden = true;
+            document.getElementById("Settings").hidden = false;
+
+            document.getElementById("CurrentTargetT").value = TargetT;
+            document.getElementById("currentE").value = E;
+            document.getElementById("currentT").value = T;
+            document.getElementById("currentG").value = G;
+        });
+
+        document.getElementById("InitBtn").addEventListener("click", function (e) {
+            hubConnection.invoke('Start');
+            document.getElementById("InitBtn").hidden = true;
+            document.getElementById("Settings").hidden = false;
+            setInterval(function () {
+                hubConnection.invoke('GetData');
+            }, 10);
+        });
+
+        document.getElementById("TargetTBtn").addEventListener("click", function (e) {
+            hubConnection.invoke('SetTargetT', document.getElementById("TargetT").value);
+        });
+
+        hubConnection.start();
+
+        
+    </script>
+</body>
+</html>

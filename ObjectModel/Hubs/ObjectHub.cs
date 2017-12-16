@@ -9,19 +9,20 @@ namespace ObjectModel.Hubs
 {
     public class ObjectHub : Hub
     {
-        private ObjectHandler Handler { get; set; }
+        private static ObjectHandler Handler { get; set; }
 
         public void Init()
         {
             if (Handler == null)
             {
                 Handler = ObjectHandler.InitInstance(this);
-                Handler.Run();
             }
+            Handler.Run();
         }
 
         public void SetG(double value)
         {
+            Console.WriteLine($"Given G={value}");
             if (Handler == null)
             {
                 Handler = ObjectHandler.InitInstance(this);
@@ -29,9 +30,9 @@ namespace ObjectModel.Hubs
             Handler.ObjectValueCalculator.G = value;
         }
 
-        public async Task Send(double T, double G)
+        public void Meter(double T, double G)
         {
-            await this.Clients.All.InvokeAsync("Send", T, G);
+            this.Clients.All.InvokeAsync("Meter", T, G);
         }
     }
 }

@@ -40,9 +40,9 @@ namespace ObjectModel.Object
             ObjectValueCalculator.Run();
         }
 
-        public async Task SendValue()
+        public void SendValue()
         {
-            await Hub.Send(ObjectValueCalculator.T, ObjectValueCalculator.G);
+            Hub.Meter(ObjectValueCalculator.T, ObjectValueCalculator.G);
         }
     }
 }

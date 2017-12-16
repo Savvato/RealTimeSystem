@@ -34,7 +34,6 @@ namespace ObjectModel.Object
         /// </summary>
         public double T1 { get; set; } = 0;
         
-
         public ObjectValueCalculator(ObjectHandler handler)
         {
             Handler = handler;
@@ -44,9 +43,12 @@ namespace ObjectModel.Object
         {
             while (true)
             {
-                Calculate();
+                for (int i = 0; i < 10; i++)
+                {
+                    Calculate();
+                    Thread.Sleep(10);
+                }
                 Handler.SendValue();
-                Thread.Sleep((int)(H * 500));
             }
         }
 
