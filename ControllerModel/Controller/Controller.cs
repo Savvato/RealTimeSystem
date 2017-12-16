@@ -52,23 +52,11 @@ namespace ControllerModel.Controller
         /// </summary>
         public double CurrentT { get; set; } = 0;
 
-        private double _currentG = 1;
 
         /// <summary>
         /// Текущий объем поступаемого воздуха
         /// </summary>
-        public double CurrentG {
-            get { return _currentG; }
-            set {
-                PreviousG = CurrentG;
-                _currentG = value;
-            }
-        }
-
-        /// <summary>
-        /// Значение объёма поступаемого воздуха в предыдущий квант времени
-        /// </summary>
-        public double PreviousG { get; set; } = 1;
+        public double CurrentG { get; set; }
 
         private double _currentControllingError = 0;
 
@@ -106,11 +94,11 @@ namespace ControllerModel.Controller
         public void Go()
         {
             CurrentControllingError = TargetT - CurrentT;
-            double newG = HandleError(CurrentControllingError);
+            double nextG = HandleError(CurrentControllingError);
             Console.WriteLine(
-                $"Control: CurError={CurrentControllingError}; PrevError={PreviousControllingError}; PreviousG={PreviousG}; OutputG={newG}"
+                $"Control: CurError={CurrentControllingError}; PrevError={PreviousControllingError}; Current={CurrentG}; OutputG={nextG}"
             );
-            ConnectionHandler.SendG(newG);
+            ConnectionHandler.SendG(nextG);
         }
 
         /// <summary>
@@ -120,7 +108,7 @@ namespace ControllerModel.Controller
         /// <returns>Объем поступающего воздуха</returns>
         public double HandleError(double error)
         {
-            return PreviousG + (49.05 * CurrentControllingError) - (48.39 * PreviousControllingError);
+            return CurrentG + (49.05 * CurrentControllingError) - (48.39 * PreviousControllingError);
         }
     }
 
