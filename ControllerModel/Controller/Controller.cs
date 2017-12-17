@@ -40,8 +40,6 @@ namespace ControllerModel.Controller
         /// </summary>
         public const int QUANTIZATION_PERIOD = 100;
 
-        private bool IsRunning { get; set; } = false;
-
         /// <summary>
         /// Целевое значение температуры газа
         /// </summary>
