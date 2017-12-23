@@ -41,9 +41,14 @@ namespace ControllerModel.Controller
         public const int QUANTIZATION_PERIOD = 100;
 
         /// <summary>
+        /// Включен ли регулятор
+        /// </summary>
+        public bool IsEnabled { get; set; } = false;
+
+        /// <summary>
         /// Целевое значение температуры газа
         /// </summary>
-        public double TargetT { get; set; } = 0;
+        public double TargetT { get; set; } = 2;
 
         /// <summary>
         /// Текущая температура газа на объекте
@@ -54,7 +59,7 @@ namespace ControllerModel.Controller
         /// <summary>
         /// Текущий объем поступаемого воздуха
         /// </summary>
-        public double CurrentG { get; set; }
+        public double CurrentG { get; set; } = 1;
 
         private double _currentControllingError = 0;
 
@@ -92,11 +97,14 @@ namespace ControllerModel.Controller
         public void Go()
         {
             CurrentControllingError = TargetT - CurrentT;
-            double nextG = HandleError(CurrentControllingError);
-            Console.WriteLine(
-                $"Control: CurError={CurrentControllingError}; PrevError={PreviousControllingError}; Current={CurrentG}; OutputG={nextG}"
-            );
-            ConnectionHandler.SendG(nextG);
+            if (IsEnabled)
+            {
+                double nextG = HandleError(CurrentControllingError);
+                Console.WriteLine(
+                    $"Control: CurError={CurrentControllingError}; PrevError={PreviousControllingError}; CurrentG={CurrentG}; OutputG={nextG}"
+                );
+                ConnectionHandler.SendG(nextG);
+            }
         }
 
         /// <summary>

@@ -19,6 +19,11 @@ namespace ControllerModel.Hubs
             Controller.Controller.Instance.ConnectionHandler = new Controller.ObjectConnection();
         }
 
+        public void EnableController(bool isControllerEnabled)
+        {
+            Controller.Controller.Instance.IsEnabled = isControllerEnabled;
+        }
+
         /// <summary>
         /// Установка целевого значения температуры газа
         /// </summary>
@@ -45,6 +50,7 @@ namespace ControllerModel.Hubs
         {
             this.Clients.All.InvokeAsync(
                 "Data", 
+                Controller.Controller.Instance.IsEnabled,
                 Controller.Controller.Instance.CurrentControllingError,
                 Controller.Controller.Instance.TargetT,
                 Controller.Controller.Instance.CurrentT,

@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>Модель объекта</h2>
-    <!--<input type="button" id="initBtn" value="Начать" />-->
+    <input type="button" id="initBtn" value="Начать" />
 
     <br/><br/>
     <div id="Settings">
@@ -36,11 +36,11 @@
             document.getElementById("currentG").value = G;
         });
 
-        //document.getElementById("initBtn").addEventListener("click", function (e) {
-        //    hubConnection.invoke('Init');
-        //    document.getElementById("initBtn").hidden = true;
-        //    document.getElementById("Settings").hidden = false;
-        //});
+        document.getElementById("initBtn").addEventListener("click", function (e) {
+            hubConnection.invoke('Init');
+            document.getElementById("initBtn").hidden = true;
+            document.getElementById("Settings").hidden = false;
+        });
 
         document.getElementById("GBtn").addEventListener("click", function (e) {
             let G = document.getElementById("G").value;
