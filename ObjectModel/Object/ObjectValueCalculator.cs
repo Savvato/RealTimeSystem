@@ -17,7 +17,7 @@ namespace ObjectModel.Object
         /// <summary>
         /// Период расчета
         /// </summary>
-        public double H { get; set; } = 1;
+        public double H { get; set; } = 0.001;
 
         /// <summary>
         /// Температура газа
@@ -27,7 +27,7 @@ namespace ObjectModel.Object
         /// <summary>
         /// Объем поступающего воздуха
         /// </summary>
-        public double G { get; set; } = 1;
+        public double G { get; set; } = 0;
 
         /// <summary>
         /// Подставное T
@@ -43,10 +43,10 @@ namespace ObjectModel.Object
         {
             while (true)
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 100; i++)
                 {
                     Calculate();
-                    Thread.Sleep(10);
+                    Thread.Sleep(1);
                 }
                 Handler.SendValue();
             }

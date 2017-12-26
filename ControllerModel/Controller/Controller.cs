@@ -48,7 +48,7 @@ namespace ControllerModel.Controller
         /// <summary>
         /// Целевое значение температуры газа
         /// </summary>
-        public double TargetT { get; set; } = 2;
+        public double TargetT { get; set; } = 1;
 
         /// <summary>
         /// Текущая температура газа на объекте
