@@ -7,7 +7,6 @@
 <body>
     <h2>Регулятор</h2>
     <input type="button" id="InitBtn" value="Старт" />
-    <br/><br/>
 
     <div id="Settings" hidden="hidden">
         <label>Запуск регулятора:</label>
@@ -30,16 +29,18 @@
         <br /><br />
         <label>Ошибка регулирования:</label>
         <input type="number" id="currentE" disabled />
+        <canvas id="chart" width="200" height="100"></canvas>
     </div>
 
     
     <br /><br />
+    <script src="js/Chart.min.js"></script>
     <script src="js/signalr-client-1.0.0-alpha2-final.min.js"></script>
     <script>
         let hubUrl = 'http://localhost:57364/hub';
         let httpConnection = new signalR.HttpConnection(hubUrl);
         let hubConnection = new signalR.HubConnection(httpConnection);
-
+        let values = [];
         hubConnection.on("Data", function (IsContollerEnabled, E, TargetT, T, G) {
             if (IsContollerEnabled) {
                 document.getElementById("IsControllerEnabledField").value = "Запущен";
@@ -55,6 +56,12 @@
             document.getElementById("currentE").value = E;
             document.getElementById("currentT").value = T;
             document.getElementById("currentG").value = G;
+
+            values.push(T);
+            if (values.length > 500) {
+                values.shift();
+            }
+            drawChart(values, TargetT);
         });
 
         document.getElementById("InitBtn").addEventListener("click", function (e) {
@@ -76,7 +83,38 @@
 
         hubConnection.start();
 
-        
+        var canvas = document.getElementById('chart');
+        var context = canvas.getContext('2d');
+
+        function drawChart(values, targetT) {
+            var data = [];
+            var labels = [];
+            for (var i = 0; i < values.length; i++) {
+                labels.push(i);
+            }
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            var lineChart = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    fill: false,
+                    datasets: [{
+                        data: values,
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                max: targetT + targetT * 1.5,
+                                min: targetT - targetT * 1.5,
+                                stepSize: targetT / 10
+                            }
+                        }]
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
