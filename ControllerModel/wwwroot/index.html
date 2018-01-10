@@ -10,10 +10,10 @@
 
     <div id="Settings" hidden="hidden">
         <label>Запуск регулятора:</label>
-        <input id="EnableController" type="checkbox"/>
+        <input id="EnableController" type="checkbox" />
         <br /><br />
         <label>Статус регулятора:</label>
-        <input type="text" id="IsControllerEnabledField" disabled/>
+        <input type="text" id="IsControllerEnabledField" disabled />
         <br /><br />
         <label>Температура газа (задание):</label>
         <input type="number" id="TargetT" min="0" /> <input type="button" id="TargetTBtn" value="Отправить" />
@@ -29,10 +29,10 @@
         <br /><br />
         <label>Ошибка регулирования:</label>
         <input type="number" id="currentE" disabled />
-        <canvas id="chart" width="200" height="100"></canvas>
+        <canvas id="chart" width="1200" height="400"></canvas>
     </div>
 
-    
+
     <br /><br />
     <script src="js/Chart.min.js"></script>
     <script src="js/signalr-client-1.0.0-alpha2-final.min.js"></script>
@@ -58,7 +58,7 @@
             document.getElementById("currentG").value = G;
 
             values.push(T);
-            if (values.length > 500) {
+            if (values.length > 700) {
                 values.shift();
             }
             drawChart(values, TargetT);
@@ -87,10 +87,11 @@
         var context = canvas.getContext('2d');
 
         function drawChart(values, targetT) {
-            var data = [];
+            var targetData = [];
             var labels = [];
             for (var i = 0; i < values.length; i++) {
                 labels.push(i);
+                targetData.push(targetT);
             }
             context.clearRect(0, 0, canvas.width, canvas.height);
             var lineChart = new Chart(canvas, {
@@ -99,19 +100,39 @@
                     labels: labels,
                     fill: false,
                     datasets: [{
+                        label: 'Температура газа',
                         data: values,
+                        fill: false,
+                        lineTension: 0.1
+                    }, {
+                        data: targetData,
+                        fill: false,
+                        label: 'Целевая температура газа',
+                        borderColor: "rgb(75, 192, 192)",
+                        lineTension: 0.1,
+                        pointRadius: 0
                     }]
                 },
                 options: {
+                    responsive: false,
+
                     scales: {
                         yAxes: [{
                             ticks: {
-                                max: targetT + targetT * 1.5,
-                                min: targetT - targetT * 1.5,
-                                stepSize: targetT / 10
+                                max: targetT + targetT * 1.2,
+                                min: targetT - targetT * 1.2,
+                                stepSize: targetT / 5
                             }
                         }]
-                    }
+                    },
+
+                    animation: {
+                        duration: 0, // general animation time
+                    },
+                    hover: {
+                        animationDuration: 0, // duration of animations when hovering an item
+                    },
+                    responsiveAnimationDuration: 0, // animation duration after a resize
                 }
             });
         }
