@@ -12,6 +12,10 @@ namespace ControllerModel
 {
     public class Program
     {
+        /// <summary>
+        /// Точка запуска приложения контроллера
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();

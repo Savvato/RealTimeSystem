@@ -7,6 +7,7 @@ using System.Threading;
 namespace ObjectModel.Object
 {
     /// <summary>
+    /// Класс реализующий интегрирование дифференциального уравнения
     /// Дифференциальное уравнение зависимости температуры уходящего газа (T(t)) от объема поступающего воздуха (G(t))
     /// 136.177 T''(t) + 82.713 T'(t) + T(t) = 0.822 G(t)
     /// </summary>
@@ -34,11 +35,18 @@ namespace ObjectModel.Object
         /// </summary>
         public double T1 { get; set; } = 0;
         
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="handler"></param>
         public ObjectValueCalculator(ObjectHandler handler)
         {
             Handler = handler;
         }
 
+        /// <summary>
+        /// Функция симуляции объекта
+        /// </summary>
         public void Run()
         {
             while (true)
@@ -52,6 +60,10 @@ namespace ObjectModel.Object
             }
         }
 
+        /// <summary>
+        /// Расчет следующего выходного значения объекта
+        /// Интегрирование по формуле Эйлера
+        /// </summary>
         private void Calculate()
         {
             double t1 = T1 + H * ((0.822 * G - 82.713 * T1 - T) / 136.177);

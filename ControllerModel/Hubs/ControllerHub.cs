@@ -19,6 +19,10 @@ namespace ControllerModel.Hubs
             Controller.Controller.Instance.ConnectionHandler = new Controller.ObjectConnection();
         }
 
+        /// <summary>
+        /// Включение/выключение контроллера
+        /// </summary>
+        /// <param name="isControllerEnabled"></param>
         public void EnableController(bool isControllerEnabled)
         {
             Controller.Controller.Instance.IsEnabled = isControllerEnabled;
